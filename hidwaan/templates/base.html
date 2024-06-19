@@ -1,0 +1,91 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Hidwaan - Dumb Chat</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"
+    />
+    <link rel="stylesheet" href="/static/style.css" />
+    <script
+      src="https://unpkg.com/htmx.org@2.0.0"
+      integrity="sha384-wS5l5IKJBvK6sPTKa2WZ1js3d947pvWXbPJ1OmWfEuxLgeHcEbjUUA5i9V5ZkpCw"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://unpkg.com/htmx-ext-ws@2.0.0/ws.js"></script>
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"
+    ></script>
+  </head>
+  <body>
+    <div x-data="hidwaan">
+      <header class="container">
+        <hgroup>
+          <h1>Hidwaan</h1>
+          <p>Dumb Chat</p>
+        </hgroup>
+      </header>
+      <main class="container">
+        <h2 class="flex-col">
+          Server List <a href="#" @click="toggleCreateServer">+</a>
+        </h2>
+
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Name</th>
+              <th scope="col">Description</th>
+              <th scope="col">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <th scope="row">Test Server</th>
+            <th>Just chill with us</th>
+            <th><button>Join</button></th>
+          </tbody>
+        </table>
+      </main>
+
+      <dialog id="create_server_dialog">
+        <article>
+          <h2>Create a Server</h2>
+          <label>
+            Name
+            <input type="text" name="server_name" />
+          </label>
+          <label>
+            Description
+            <input type="text" name="server_description" />
+          </label>
+          <footer>
+            <button class="secondary" @click="toggleCreateServer">
+              Cancel
+            </button>
+            <button>Create</button>
+          </footer>
+        </article>
+      </dialog>
+    </div>
+  </body>
+
+  <script>
+    function onInit() {
+      Alpine.data("hidwaan", function () {
+        return {
+          isCreateServerOpen: false,
+          toggleCreateServer: function () {
+            modal = document.getElementById("create_server_dialog");
+            this.isCreateServerOpen = !this.isCreateServerOpen;
+            if (this.isCreateServerOpen) {
+              modal.showModal();
+            } else {
+              modal.close();
+            }
+          },
+        };
+      });
+    }
+    document.addEventListener("alpine:init", onInit);
+  </script>
+</html>
