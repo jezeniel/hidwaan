@@ -1,0 +1,35 @@
+{% extends 'base.html' %} {% block body %}
+<body x-data="hidwaan.chat()">
+  <div class="chat-container" x-init="connectws">
+    <div class="sidebar">
+      <h2>Channels</h2>
+      <ul>
+        <li>#general</li>
+        <li>#random</li>
+        <li>#help</li>
+      </ul>
+    </div>
+
+    <div class="chat-panel">
+      <div class="messages">
+        <template x-for="msg in messages">
+          <div class="message">
+            <span class="username" x-text="msg.username + ': '"></span>
+            <span class="text" x-text="msg.text"></span>
+          </div>
+        </template>
+      </div>
+      <div class="input-panel">
+        <input
+          type="text"
+          @keyup.enter="sendMessage"
+          x-model="inputMessage"
+          placeholder="Type a message..."
+        />
+        <button @click="sendMessage">Send</button>
+      </div>
+    </div>
+  </div>
+</body>
+<script src="/static/app.js"></script>
+{% endblock %}

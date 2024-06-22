@@ -1,4 +1,5 @@
-{% extends "base.html" %} {% block body %}
+{% extends "base.html" %} 
+{% block body %}
 <body x-data="hidwaan.servers()">
   <header class="container">
     <hgroup>
@@ -25,7 +26,7 @@
             <th scope="row" x-text="server.name"></th>
             <th x-text="server.description"></th>
             <th>
-              <a role="button" x-bind:href="'/chat/' + server.id">Join</a>
+              <a role="button" href="/chat">Join</a>
             </th>
           </tr>
         </template>

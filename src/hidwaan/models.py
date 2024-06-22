@@ -6,11 +6,21 @@ class ServerBase(BaseModel):
     description: str
 
 
+class ServerCreate(ServerBase):
+    pass
+
+
 class Server(ServerBase):
     id: int
+
+
+class ChannelBase(BaseModel):
     name: str
-    description: str
 
 
-class ServerCreate(ServerBase):
+class Channel(ChannelBase):
+    id: int
+
+
+class ChannelCreate(ChannelBase):
     pass

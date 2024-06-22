@@ -46,5 +46,39 @@ window.hidwaan = (function () {
     };
   };
 
+  app.chat = function () {
+    return {
+      messages: [],
+      inputMessage: "",
+      username: "",
+      socket: null,
+      connected: false,
+      connectws: function () {
+        this.socket = new WebSocket("ws://192.168.68.122:8000/ws");
+        this.socket.onopen = function (event) {
+          this.connected = true;
+          this.socket.send(JSON.stringify({ type: "JOIN" }));
+          this.username = prompt("Enter nickname", "");
+        }.bind(this);
+
+        this.socket.onmessage = function (event) {
+          var data = JSON.parse(event.data);
+          if (data.type == "MSG") {
+            this.messages.push({ username: data.username, text: data.text });
+          }
+        }.bind(this);
+      },
+      sendMessage: function () {
+        var message = {
+          username: this.username,
+          text: this.inputMessage,
+          type: "MSG",
+        };
+        this.socket.send(JSON.stringify(message));
+        this.inputMessage = "";
+      },
+    };
+  };
+
   return app;
 })();
