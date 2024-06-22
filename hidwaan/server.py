@@ -13,15 +13,16 @@ templates = Jinja2Templates(directory=config.TEMPLATE_DIR)
 app.mount("/static", StaticFiles(directory=config.STATIC_DIR), name="static")
 
 
-server_list = [
-    {"name": "Test", "description": "lorem ipsum"},
-    {"name": "Hello World", "description": "enjoy the chat!"},
-]
-
-
 class Server(BaseModel):
+    id: int
     name: str
     description: str
+
+
+server_list = [
+    Server(**{"id": 1, "name": "Test", "description": "lorem ipsum"}),
+    Server(**{"id": 2, "name": "Hello World", "description": "enjoy the chat!"}),
+]
 
 
 @app.get("/")
@@ -29,17 +30,13 @@ async def root(request: Request):
     return templates.TemplateResponse(request=request, name="index.html")
 
 
-@app.get("/servers", response_class=HTMLResponse)
-async def servers(request: Request):
-    return templates.TemplateResponse(
-        request=request, name="server_list.html", context={"servers": server_list}
-    )
+@app.get("/servers")
+async def servers() -> list[Server]:
+    return server_list
 
 
 @app.post("/servers")
 async def create_server(server: Server):
-    server_list.append(server.model_dump())
-    print(server_list)
     return server_list
 
 

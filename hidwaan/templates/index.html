@@ -8,18 +8,12 @@
     />
     <link rel="stylesheet" href="/static/style.css" />
     <script
-      src="https://unpkg.com/htmx.org@2.0.0"
-      integrity="sha384-wS5l5IKJBvK6sPTKa2WZ1js3d947pvWXbPJ1OmWfEuxLgeHcEbjUUA5i9V5ZkpCw"
-      crossorigin="anonymous"
-    ></script>
-    <script src="https://unpkg.com/htmx-ext-ws@2.0.0/ws.js"></script>
-    <script
       defer
       src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"
     ></script>
   </head>
   <body>
-    <div x-data="hidwaan">
+    <div x-data="hidwaan.servers()">
       <header class="container">
         <hgroup>
           <h1>Hidwaan</h1>
@@ -28,10 +22,10 @@
       </header>
       <main class="container">
         <h2 class="flex-col">
-          Server List <a href="#" @click="toggleCreateServer">+</a>
+          Server List <a href="#" @click="toggleCreateModal">+</a>
         </h2>
 
-        <table>
+        <table x-init="getServers()" x-show="serversLoaded" x-transition.opacity>
           <thead>
             <tr>
               <th scope="col">Name</th>
@@ -39,27 +33,35 @@
               <th scope="col">Action</th>
             </tr>
           </thead>
-          <tbody id="server_list" hx-get="/servers" hx-trigger="load"></tbody>
+          <tbody id="server_list">
+            <template x-for="server in servers" :key="server.id">
+              <tr> 
+                <th scope="row" x-text="server.name"></th>
+                <th x-text="server.description"></th>
+                <th><button>Join</button></th>
+              </tr>
+            </template>
+          </tbody>
         </table>
       </main>
 
-      <dialog id="create_server_dialog">
+      <dialog id="create_server_dialog" x-show="showCreateModal" x-transition.opacity  open>
         <form>
         <article>
           <h2>Create a Server</h2>
           <label>
             Name
-            <input type="text" name="name" />
+            <input type="text" name="name" required autocomplete="off"/>
           </label>
           <label>
             Description
-            <input type="text" name="description" />
+            <input type="text" name="description" required autocomplete="off"/>
           </label>
           <footer>
-            <button class="secondary" @click="toggleCreateServer">
+            <button class="secondary" @click="toggleCreateModal">
               Cancel
             </button>
-            <button hx-post="/servers">Create</button>
+            <button>Create</button>
           </footer>
           </form>
         </article>
@@ -67,23 +69,7 @@
     </div>
   </body>
 
+  <script src="/static/app.js"></script>
   <script>
-    function onInit() {
-      Alpine.data("hidwaan", function () {
-        return {
-          isCreateServerOpen: false,
-          toggleCreateServer: function () {
-            modal = document.getElementById("create_server_dialog");
-            this.isCreateServerOpen = !this.isCreateServerOpen;
-            if (this.isCreateServerOpen) {
-              modal.showModal();
-            } else {
-              modal.close();
-            }
-          },
-        };
-      });
-    }
-    document.addEventListener("alpine:init", onInit);
   </script>
 </html>
