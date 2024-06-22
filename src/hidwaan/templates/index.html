@@ -1,75 +1,73 @@
-<!doctype html>
-<html>
-  <head>
-    <title>Hidwaan - Dumb Chat</title>
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"
-    />
-    <link rel="stylesheet" href="/static/style.css" />
-    <script
-      defer
-      src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"
-    ></script>
-  </head>
-  <body>
-    <div x-data="hidwaan.servers()">
-      <header class="container">
-        <hgroup>
-          <h1>Hidwaan</h1>
-          <p>Dumb Chat</p>
-        </hgroup>
-      </header>
-      <main class="container">
-        <h2 class="flex-col">
-          Server List <a href="#" @click="toggleCreateModal">+</a>
-        </h2>
+{% extends "base.html" %} {% block body %}
+<body x-data="hidwaan.servers()">
+  <header class="container">
+    <hgroup>
+      <h1>Hidwaan</h1>
+      <p>Dumb Chat</p>
+    </hgroup>
+  </header>
+  <main class="container">
+    <h2 class="flex-col">
+      Server List <a href="#" @click="toggleCreateModal">+</a>
+    </h2>
 
-        <table x-init="getServers()" x-show="serversLoaded" x-transition.opacity>
-          <thead>
-            <tr>
-              <th scope="col">Name</th>
-              <th scope="col">Description</th>
-              <th scope="col">Action</th>
-            </tr>
-          </thead>
-          <tbody id="server_list">
-            <template x-for="server in servers" :key="server.id">
-              <tr> 
-                <th scope="row" x-text="server.name"></th>
-                <th x-text="server.description"></th>
-                <th><button>Join</button></th>
-              </tr>
-            </template>
-          </tbody>
-        </table>
-      </main>
+    <table x-init="getServers()" x-show="serversLoaded" x-transition.opacity>
+      <thead>
+        <tr>
+          <th scope="col">Name</th>
+          <th scope="col">Description</th>
+          <th scope="col">Action</th>
+        </tr>
+      </thead>
+      <tbody id="server_list">
+        <template x-for="server in servers" :key="server.id">
+          <tr>
+            <th scope="row" x-text="server.name"></th>
+            <th x-text="server.description"></th>
+            <th>
+              <a role="button" x-bind:href="'/chat/' + server.id">Join</a>
+            </th>
+          </tr>
+        </template>
+      </tbody>
+    </table>
+  </main>
 
-      <dialog id="create_server_dialog" x-show="showCreateModal" x-transition.opacity  open>
-        <form>
-        <article>
-          <h2>Create a Server</h2>
-          <label>
-            Name
-            <input type="text" name="name" required autocomplete="off"/>
-          </label>
-          <label>
-            Description
-            <input type="text" name="description" required autocomplete="off"/>
-          </label>
-          <footer>
-            <button class="secondary" @click="toggleCreateModal">
-              Cancel
-            </button>
-            <button>Create</button>
-          </footer>
-          </form>
-        </article>
-      </dialog>
-    </div>
-  </body>
-
-  <script src="/static/app.js"></script>
-  <script>
-  </script>
-</html>
+  <dialog
+    id="create_server_dialog"
+    x-show="showCreateModal"
+    x-transition.opacity
+  >
+    <article>
+      <form @submit.prevent="submitForm">
+        <h2>Create a Server</h2>
+        <label>
+          Name
+          <input
+            type="text"
+            name="name"
+            x-model="serverForm.name"
+            required
+            autocomplete="off"
+          />
+        </label>
+        <label>
+          Description
+          <input
+            type="text"
+            name="description"
+            x-model="serverForm.description"
+            required
+            autocomplete="off"
+          />
+        </label>
+        <footer>
+          <button class="secondary" @click="toggleCreateModal">Cancel</button>
+          <button>Create</button>
+        </footer>
+      </form>
+    </article>
+  </dialog>
+</body>
+<script src="/static/app.js"></script>
+{% endblock %}
