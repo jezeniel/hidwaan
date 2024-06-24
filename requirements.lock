@@ -60,6 +60,8 @@ pydantic-core==2.18.4
     # via pydantic
 pygments==2.18.0
     # via rich
+pyjwt==2.8.0
+    # via hidwaan
 python-dotenv==1.0.1
     # via uvicorn
 python-multipart==0.0.9

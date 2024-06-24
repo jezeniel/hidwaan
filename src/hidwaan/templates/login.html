@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block body %}
+<body>
+  <header class="flex container" style="justify-content: center">
+    <hgroup>
+      <h1>Hidwaan</h1>
+    </hgroup>
+  </header>
+  <main x-data="initApp()" class="flex container" style="justify-content:center">
+    <form>
+      <fieldset>
+        <label>
+          Username
+          <input type="text" x-model="loginForm.username" name="username">
+        </label>
+        <label>
+          Password
+          <input type="password" x-model="loginForm.password" name="password">
+        </label>
+      </fieldset>
+      <button @click.prevent="authenticate">Login</button>
+    </form>
+  </main>
+</body>
+
+<script>
+  function initApp() {
+    return {
+      loginForm: {"username": "", "password": ""},
+      authenticate: async function() {
+        const resp = await fetch("/auth/user", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(this.loginForm)
+        });
+
+        if(!resp.ok) {
+          alert("Invalid login!");
+          return;
+        }
+
+        const data = await resp.json();
+      }
+    }
+  }
+</script>
+{% endblock %}

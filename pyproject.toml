@@ -8,6 +8,7 @@ authors = [
 dependencies = [
     "fastapi>=0.111.0",
     "aiosqlite>=0.20.0",
+    "pyjwt>=2.8.0",
 ]
 readme = "README.md"
 requires-python = ">= 3.8"
@@ -20,6 +21,7 @@ build-backend = "hatchling.build"
 managed = true
 dev-dependencies = [
     "black>=24.4.2",
+    "ipython>=8.25.0",
 ]
 
 [tool.hatch.metadata]
