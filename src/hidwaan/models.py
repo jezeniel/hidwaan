@@ -24,3 +24,16 @@ class Channel(ChannelBase):
 
 class ChannelCreate(ChannelBase):
     pass
+
+
+class UserBase(BaseModel):
+    username: str
+
+
+class User(UserBase):
+    id: int
+
+
+class UserCredential(BaseModel):
+    username: str
+    password: str

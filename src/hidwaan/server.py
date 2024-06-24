@@ -1,10 +1,21 @@
-import websockets
-from fastapi import FastAPI, Request, WebSocket, WebSocketDisconnect
+from aiosqlite import Connection
+from fastapi import (
+    Depends,
+    FastAPI,
+    HTTPException,
+    Request,
+    Response,
+    WebSocket,
+    WebSocketDisconnect,
+    status,
+)
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
 from . import config
-from .models import Server, ServerCreate
+from .database import get_db
+from .models import Server, ServerCreate, User, UserCredential
+from .queries import auth_user
 
 app = FastAPI()
 
@@ -21,7 +32,22 @@ server_list = [
 
 
 @app.get("/")
-async def root(request: Request):
+async def index(request: Request):
+    return templates.TemplateResponse(request=request, name="index.html")
+
+
+@app.post("/login")
+async def login(credential: UserCredential, db: Connection = Depends(get_db)) -> User:
+    user = await auth_user(db, credential.username, credential.password)
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials."
+        )
+    return user
+
+
+@app.get("/home")
+async def home(request: Request):
     return templates.TemplateResponse(request=request, name="index.html")
 
 
@@ -53,5 +79,5 @@ async def ws_endpoint(websocket: WebSocket):
             data = await websocket.receive_json()
             for conn in connected:
                 await conn.send_json(data)
-    except:
+    except WebSocketDisconnect:
         connected.remove(websocket)

@@ -54,7 +54,7 @@ window.hidwaan = (function () {
       socket: null,
       connected: false,
       connectws: function () {
-        this.socket = new WebSocket("ws://192.168.68.122:8000/ws");
+        this.socket = new WebSocket("ws://localhost:8000/ws");
         this.socket.onopen = function (event) {
           this.connected = true;
           this.socket.send(JSON.stringify({ type: "JOIN" }));

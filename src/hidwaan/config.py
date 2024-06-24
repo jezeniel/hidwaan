@@ -1,6 +1,8 @@
 from pathlib import Path
 
-BASE_DIR = Path(__file__).resolve().parent
+SRC_DIR = Path(__file__).resolve().parent
+ROOT_DIR = SRC_DIR.parent.parent
 
-TEMPLATE_DIR = BASE_DIR / "templates"
-STATIC_DIR = BASE_DIR / "static"
+TEMPLATE_DIR = SRC_DIR / "templates"
+STATIC_DIR = SRC_DIR / "static"
+DB_FILE = ROOT_DIR / "local.db"
