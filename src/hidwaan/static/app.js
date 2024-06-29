@@ -11,7 +11,7 @@ window.hidwaan = (function () {
         description: "",
       },
       submitForm: async function () {
-        const response = await fetch("/servers", {
+        const response = await fetch("/api/v1/servers", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -19,17 +19,25 @@ window.hidwaan = (function () {
           body: JSON.stringify(this.serverForm),
         });
 
+        if (!response.ok) {
+          return;
+        }
+
         const data = await response.json();
         this.servers.push(data);
         this.showCreateModal = false;
       },
       getServers: async function () {
-        const response = await fetch("/servers", {
+        const response = await fetch("/api/v1/servers", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
           },
         });
+
+        if (!response.ok) {
+          return;
+        }
 
         this.servers = await response.json();
         this.serversLoaded = true;

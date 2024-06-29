@@ -1,12 +1,15 @@
 {% extends "base.html" %} 
 {% block body %}
 <body x-data="hidwaan.servers()">
-  <header class="container">
-    <hgroup>
-      <h1>Hidwaan</h1>
-      <p>Dumb Chat</p>
-    </hgroup>
-  </header>
+  <nav class="container">
+    <ul>
+      <li><strong>Hidwaan</strong></li>
+    </ul>
+    <ul>
+      <li>Welcome {{user.username}}!</li>
+      <li><a href="/logout">Logout</a></li>
+    </ul>
+  </nav>
   <main class="container">
     <h2 class="flex-col">
       Server List <a href="#" @click="toggleCreateModal">+</a>

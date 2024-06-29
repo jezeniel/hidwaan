@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends, HTTPException, Response, status
 
 from .. import errors, service
 from ..database import get_db
-from ..dependency import get_current_user
+from ..dependency import get_current_user_raise
 from ..models import Server, ServerCreate, User, UserCredential
 
 router = APIRouter(
@@ -48,7 +48,7 @@ async def user_register(
 
 
 @router.get("/me")
-async def me(current_user: User = Depends(get_current_user)) -> User:
+async def me(current_user: User = Depends(get_current_user_raise)) -> User:
     return current_user
 
 
@@ -61,7 +61,7 @@ async def list_servers(db: Connection = Depends(get_db)) -> list[Server]:
 async def create_server(
     server_create: ServerCreate,
     db: Connection = Depends(get_db),
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(get_current_user_raise),
 ) -> Server:
     server = await service.create_server(
         db,
