@@ -58,15 +58,25 @@ window.hidwaan = (function () {
     return {
       messages: [],
       inputMessage: "",
-      username: "",
+      user: null,
       socket: null,
       connected: false,
-      connectws: function () {
+      connectws: async function () {
+        const response = await fetch("/api/v1/me", {
+          method: "GET",
+        });
+
+        if (!response.ok) {
+          alert("Something went wrong! Refresh page.");
+          return;
+        }
+
+        this.user = await response.json();
+
         this.socket = new WebSocket("ws://localhost:8000/ws");
         this.socket.onopen = function (event) {
           this.connected = true;
           this.socket.send(JSON.stringify({ type: "JOIN" }));
-          this.username = prompt("Enter nickname", "");
         }.bind(this);
 
         this.socket.onmessage = function (event) {
@@ -78,7 +88,7 @@ window.hidwaan = (function () {
       },
       sendMessage: function () {
         var message = {
-          username: this.username,
+          username: this.user.username,
           text: this.inputMessage,
           type: "MSG",
         };
